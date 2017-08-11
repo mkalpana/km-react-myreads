@@ -39,4 +39,7 @@ export const search = (query, maxResults) =>
     },
     body: JSON.stringify({query, maxResults})
   }).then(res => res.json())
-    .then(data => data.books);
+    .then(data => {
+      console.log(data.books);
+      return data.books.error ? [] : data.books;
+    });

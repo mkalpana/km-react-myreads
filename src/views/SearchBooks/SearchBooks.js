@@ -1,12 +1,13 @@
 import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import './SearchBooks.css';
-
+import Books from '../../components/Books/Books';
 
 class SearchBooks extends Component {
   static propTypes = {
     onSearch: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
+    onChangeBookShelf: PropTypes.func.isRequired,
     searchResults: PropTypes.array.isRequired
   };
 
@@ -15,8 +16,7 @@ class SearchBooks extends Component {
   };
 
   render() {
-    const { onSearch, onClose, searchResults } = this.props;
-    console.log(searchResults);
+    const { onSearch, onClose, onChangeBookShelf, searchResults } = this.props;
 
     return (
       <div className="search-books">
@@ -27,7 +27,7 @@ class SearchBooks extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          <Books books={searchResults} onChangeBookShelf={onChangeBookShelf} />
         </div>
       </div>
     );

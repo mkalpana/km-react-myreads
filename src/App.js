@@ -1,45 +1,80 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import * as BooksAPI from './util/BooksAPI';
+import * as BooksAPI from './utils/BooksAPI';
 import './App.css';
 import ListBooks from './views/ListBooks/ListBooks';
 import SearchBooks from './views/SearchBooks/SearchBooks';
 
 class BooksApp extends React.Component {
   state = {
-    searchBooks: [],
+    searchResults: [],
     books: []
   };
 
   componentDidMount() {
-    BooksAPI.getAll()
-      .then(books => {
-        console.log(books);
-        this.setState({ books });
-      });
+    this.getAllBooks();
   }
 
-  onSearchBooks = (searchTerm) => {
-    BooksAPI.search(searchTerm, 20)
-      .then(searchBooks => {
-        console.log(searchBooks);
-        this.setState({ searchBooks });
-      })
+  getAllBooks = () => {
+    BooksAPI.getAll().then(books => this.setState({ books }));
+  };
+
+  onSearchBooks = (query) => {
+    if (query) {
+      BooksAPI.search(query, 20)
+        .then(searchResults => {
+          // console.log(searchResults);
+          this.setState({ searchResults });
+        });
+    }
+  };
+
+  onChangeBookShelf = (book, newShelf) => {
+    if (book && newShelf) {
+      BooksAPI.update(book, newShelf)
+        .then((listBooks) => {
+          // console.log(listBooks);
+          this.setState((state) => {
+            let searchResults = state.searchResults;
+            let books = state.books;
+            searchResults.map(b => (b.shelf = 'none'));
+            this.updateBooksShelf(listBooks, 'currentlyReading', searchResults);
+            this.updateBooksShelf(listBooks, 'wantToRead', searchResults);
+            this.updateBooksShelf(listBooks, 'read', searchResults);
+            books.map(b => ((b.id === book.id) ? b.shelf = newShelf : null));
+            return { books, searchResults };
+          });
+        });
+    }
+  };
+
+  updateBooksShelf = (listBooks, bookShelf, searchResults) => {
+    listBooks[bookShelf].map(bookId => {
+      const item = searchResults.find(b => b.id === bookId);
+      if (item) {
+        item.shelf = bookShelf;
+      }
+    });
   };
 
   render() {
+    const { books, searchResults } = this.state;
     return (
       <div className="app">
         <Route exact path="/search" render={({ history }) => (
           <SearchBooks
             onSearch={this.onSearchBooks}
             onClose={() => history.push('/')}
-            searchResults={[]}
+            onChangeBookShelf={this.onChangeBookShelf}
+            searchResults={searchResults}
           />
         )}/>
         <Route exact path="/" render={({ history }) => (
           <ListBooks
+            onChangeBookShelf={this.onChangeBookShelf}
             onOpenSearch={() => history.push('/search')}
+            getAllBooks={this.getAllBooks}
+            books={books}
           />
         )}/>
       </div>
