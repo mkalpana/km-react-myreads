@@ -23,7 +23,6 @@ class BooksApp extends React.Component {
     if (query) {
       BooksAPI.search(query, 20)
         .then(results => {
-          // console.log(results);
           this.setState((state) => {
             let searchResults = results;
             state.books.map(book => {
@@ -42,7 +41,6 @@ class BooksApp extends React.Component {
     if (book && newShelf) {
       BooksAPI.update(book, newShelf)
         .then((listBooks) => {
-          // console.log(listBooks);
           this.setState((state) => {
             let searchResults = state.searchResults;
             let books = state.books;

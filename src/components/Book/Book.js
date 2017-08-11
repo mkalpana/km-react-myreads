@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import './Book.css';
 
 const Book = (props) => {
-  console.log(props.book);
   const { book: { title, authors, shelf, imageLinks }, onChangeBookShelf } = props;
   const { thumbnail } = imageLinks || {};
   return(
