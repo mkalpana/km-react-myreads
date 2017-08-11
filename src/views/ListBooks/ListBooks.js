@@ -4,10 +4,6 @@ import './ListBooks.css';
 import BookShelf from "../../components/BookShelf/BookShelf";
 
 class ListBooks extends Component {
-  state = {
-    books: []
-  };
-
   static propTypes = {
     onOpenSearch: PropTypes.func.isRequired,
     onChangeBookShelf: PropTypes.func.isRequired,
