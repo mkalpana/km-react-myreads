@@ -8,12 +8,17 @@ class SearchBooks extends Component {
     onSearch: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     onChangeBookShelf: PropTypes.func.isRequired,
+    resetSearchResults: PropTypes.func.isRequired,
     searchResults: PropTypes.array.isRequired
   };
 
   static defaultProps = {
     searchResults: []
   };
+
+  componentDidMount() {
+    this.props.resetSearchResults();
+  }
 
   render() {
     const { onSearch, onClose, onChangeBookShelf, searchResults } = this.props;

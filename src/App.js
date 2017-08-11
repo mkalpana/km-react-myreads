@@ -22,9 +22,18 @@ class BooksApp extends React.Component {
   onSearchBooks = (query) => {
     if (query) {
       BooksAPI.search(query, 20)
-        .then(searchResults => {
-          // console.log(searchResults);
-          this.setState({ searchResults });
+        .then(results => {
+          // console.log(results);
+          this.setState((state) => {
+            let searchResults = results;
+            state.books.map(book => {
+              let foundBook = searchResults.find(b => b.id === book.id);
+              if (foundBook) {
+                foundBook.shelf = book.shelf;
+              }
+            });
+            return { searchResults };
+          });
         });
     }
   };
@@ -57,6 +66,10 @@ class BooksApp extends React.Component {
     });
   };
 
+  resetSearchResults = () => {
+    this.setState({ searchResults: [] });
+  };
+
   render() {
     const { books, searchResults } = this.state;
     return (
@@ -67,6 +80,7 @@ class BooksApp extends React.Component {
             onClose={() => history.push('/')}
             onChangeBookShelf={this.onChangeBookShelf}
             searchResults={searchResults}
+            resetSearchResults={this.resetSearchResults}
           />
         )}/>
         <Route exact path="/" render={({ history }) => (
