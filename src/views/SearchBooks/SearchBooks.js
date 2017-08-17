@@ -17,6 +17,7 @@ class SearchBooks extends Component {
   };
 
   componentDidMount() {
+    // Reset search results.
     this.props.resetSearchResults();
   }
 

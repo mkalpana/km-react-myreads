@@ -8,7 +8,7 @@ const Book = (props) => {
   return(
     <div className="book">
       <div className="book-top">
-        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${thumbnail})` }} />
+        <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${thumbnail})` }} />
         <div className="book-shelf-changer">
           <select value={shelf ? shelf : 'none'} onChange={(e) => onChangeBookShelf(props.book, e.target.value)}>
             <option value="moveTo" disabled>Move to...</option>

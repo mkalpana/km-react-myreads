@@ -22,37 +22,43 @@ class BooksApp extends React.Component {
   onSearchBooks = (query) => {
     if (query) {
       BooksAPI.search(query, 20)
-        .then(results => {
-          this.setState((state) => {
-            let searchResults = results;
-            state.books.map(book => {
-              let foundBook = searchResults.find(b => b.id === book.id);
-              if (foundBook) {
-                foundBook.shelf = book.shelf;
-              }
-            });
-            return { searchResults };
-          });
-        });
+        .then(results => this.updateSearchResultsWithShelfInfo(results));
     }
+  };
+
+  updateSearchResultsWithShelfInfo = (results) => {
+    // Update the search results with shelf information.
+    this.setState((state) => {
+      let searchResults = results;
+      state.books.map(book => {
+        let foundBook = searchResults.find(b => b.id === book.id);
+        if (foundBook) {
+          foundBook.shelf = book.shelf;
+        }
+      });
+      return { searchResults };
+    });
   };
 
   onChangeBookShelf = (book, newShelf) => {
     if (book && newShelf) {
       BooksAPI.update(book, newShelf)
-        .then((listBooks) => {
-          this.setState((state) => {
-            let searchResults = state.searchResults;
-            let books = state.books;
-            searchResults.map(b => (b.shelf = 'none'));
-            this.updateBooksShelf(listBooks, 'currentlyReading', searchResults);
-            this.updateBooksShelf(listBooks, 'wantToRead', searchResults);
-            this.updateBooksShelf(listBooks, 'read', searchResults);
-            books.map(b => ((b.id === book.id) ? b.shelf = newShelf : null));
-            return { books, searchResults };
-          });
-        });
+        .then((listBooks) => this.updateBooksShelvesInfo(listBooks, book, newShelf));
     }
+  };
+
+  updateBooksShelvesInfo = (listBooks, book, newShelf) => {
+    // Update the book shelves based on API response.
+    this.setState((state) => {
+      let searchResults = state.searchResults;
+      let books = state.books;
+      searchResults.map(b => (b.shelf = 'none'));
+      this.updateBooksShelf(listBooks, 'currentlyReading', searchResults);
+      this.updateBooksShelf(listBooks, 'wantToRead', searchResults);
+      this.updateBooksShelf(listBooks, 'read', searchResults);
+      books.map(b => ((b.id === book.id) ? b.shelf = newShelf : null));
+      return { books, searchResults };
+    });
   };
 
   updateBooksShelf = (listBooks, bookShelf, searchResults) => {

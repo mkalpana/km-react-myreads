@@ -11,6 +11,7 @@ class ListBooks extends Component {
   };
 
   componentDidMount() {
+    // Get all the books on the shelf.
     this.props.getAllBooks();
   }
 

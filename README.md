@@ -18,7 +18,7 @@ The application requires the following software to be installed locally.
 
 ## Building production assets.
 
-Use the command `npm build` to generate production assets for deploying to a http server.
+Use the command `npm run build` to generate production assets for deploying to a http server. The production assets are generated in the `/build` folder.
 
 ## Important
 The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md).
